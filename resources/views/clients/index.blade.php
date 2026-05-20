@@ -2,14 +2,28 @@
 @section('title', 'Manajemen Klien')
 @section('page-title', 'Klien')
 
-@section('topbar-actions')
+@section('content')
+
+{{-- Flash success --}}
+@if(session('success'))
+    <div class="flash flash-success" style="margin-bottom:16px">
+        ✓ {{ session('success') }}
+    </div>
+@endif
+
+{{-- Header row: judul + tombol tambah --}}
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+    <div style="font-size:14px;color:#64748b">
+        Total <strong>{{ $clients->total() }}</strong> klien terdaftar
+    </div>
+    {{-- Tombol tambah klien langsung di sini, tidak pakai topbar-actions --}}
     <a href="{{ route('clients.create') }}" class="btn btn-primary">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px">
+            <path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
         Tambah Klien
     </a>
-@endsection
-
-@section('content')
+</div>
 
 {{-- Filter & Search --}}
 <div class="card" style="margin-bottom:16px">
@@ -17,13 +31,14 @@
         <form method="GET" style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap">
             <div class="field" style="flex:1;min-width:200px">
                 <label>Cari Klien</label>
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="Nama, email, website...">
+                <input type="text" name="search" value="{{ request('search') }}"
+                       placeholder="Nama, email, website...">
             </div>
             <div class="field" style="width:160px">
                 <label>Status</label>
                 <select name="status">
                     <option value="">Semua Status</option>
-                    <option value="active" {{ request('status')==='active' ? 'selected':'' }}>Aktif</option>
+                    <option value="active"   {{ request('status')==='active'   ? 'selected':'' }}>Aktif</option>
                     <option value="inactive" {{ request('status')==='inactive' ? 'selected':'' }}>Nonaktif</option>
                 </select>
             </div>
@@ -38,46 +53,57 @@
 {{-- Tabel klien --}}
 <div class="card">
     <div class="card-header">
-        <span class="card-title">{{ $clients->total() }} Klien</span>
+        <span class="card-title">Daftar Klien</span>
     </div>
     <div class="table-wrap">
         @if($clients->isEmpty())
             <div class="empty-state">
-                <svg viewBox="0 0 48 48" fill="none"><circle cx="24" cy="18" r="8" stroke="currentColor" stroke-width="2"/><path d="M6 42c0-9.9 8.1-16 18-16s18 6.1 18 16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-                <p>Belum ada klien. Tambahkan klien pertama kamu!</p>
-                <a href="{{ route('clients.create') }}" class="btn btn-primary">+ Tambah Klien</a>
+                <svg viewBox="0 0 48 48" fill="none">
+                    <circle cx="24" cy="18" r="8" stroke="currentColor" stroke-width="2"/>
+                    <path d="M6 42c0-9.9 8.1-16 18-16s18 6.1 18 16"
+                          stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                <p>Belum ada klien.</p>
+                <a href="{{ route('clients.create') }}" class="btn btn-primary">
+                    + Tambah Klien Pertama
+                </a>
             </div>
         @else
         <table>
             <thead>
                 <tr>
-                    <th>Klien</th>
-                    <th>Kontak</th>
-                    <th>Website</th>
-                    <th>Invoice</th>
-                    <th>Total Transaksi</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
+                    <th>KLIEN</th>
+                    <th>KONTAK</th>
+                    <th>WEBSITE</th>
+                    <th>INVOICE</th>
+                    <th>TOTAL TRANSAKSI</th>
+                    <th>STATUS</th>
+                    <th>AKSI</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($clients as $client)
                 <tr>
                     <td>
-                        <a href="{{ route('clients.show', $client) }}" style="font-weight:600;color:#1a1a2e;text-decoration:none">
+                        <a href="{{ route('clients.show', $client) }}"
+                           style="font-weight:600;color:#1a1a2e;text-decoration:none">
                             {{ $client->company_name }}
                         </a>
                         @if($client->pic_name)
-                            <div style="font-size:11px;color:#94a3b8">PIC: {{ $client->pic_name }}</div>
+                            <div style="font-size:11px;color:#94a3b8">
+                                PIC: {{ $client->pic_name }}
+                            </div>
                         @endif
                     </td>
                     <td>
                         <div style="font-size:13px">{{ $client->phone ?? '-' }}</div>
                         <div style="font-size:11px;color:#94a3b8">{{ $client->email ?? '' }}</div>
                     </td>
-                    <td style="color:#64748b;font-size:12px">{{ $client->website ?? '-' }}</td>
-                    <td style="text-align:center">
-                        <span style="font-weight:600">{{ $client->invoices_count }}</span>
+                    <td style="color:#64748b;font-size:12px">
+                        {{ $client->website ?? '-' }}
+                    </td>
+                    <td style="text-align:center;font-weight:600">
+                        {{ $client->invoices_count ?? 0 }}
                     </td>
                     <td style="font-weight:500">
                         Rp {{ number_format($client->invoices_sum_total ?? 0, 0, ',', '.') }}
@@ -88,20 +114,27 @@
                         </span>
                     </td>
                     <td>
-                        <div style="display:flex;gap:6px">
-                            <a href="{{ route('clients.show', $client) }}" class="btn btn-outline btn-sm">Detail</a>
-                            <a href="{{ route('clients.edit', $client) }}" class="btn btn-outline btn-sm">Edit</a>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
+                            <a href="{{ route('clients.show', $client) }}"
+                               class="btn btn-outline btn-sm">Detail</a>
+                            <a href="{{ route('clients.edit', $client) }}"
+                               class="btn btn-outline btn-sm">Edit</a>
                             @if($client->is_active)
-                            <form method="POST" action="{{ route('clients.destroy', $client) }}"
-                                  onsubmit="return confirm('Nonaktifkan klien {{ $client->company_name }}?')">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Nonaktifkan</button>
-                            </form>
+                                <form method="POST"
+                                      action="{{ route('clients.destroy', $client) }}"
+                                      onsubmit="return confirm('Nonaktifkan klien {{ addslashes($client->company_name) }}?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">
+                                        Nonaktifkan
+                                    </button>
+                                </form>
                             @else
-                            <form method="POST" action="{{ route('clients.activate', $client) }}">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-sm">Aktifkan</button>
-                            </form>
+                                <form method="POST" action="{{ route('clients.activate', $client) }}">
+                                    @csrf
+                                    <button type="submit" class="btn btn-success btn-sm">
+                                        Aktifkan
+                                    </button>
+                                </form>
                             @endif
                         </div>
                     </td>
@@ -111,10 +144,16 @@
         </table>
         @endif
     </div>
+
+    {{-- Pagination --}}
     @if($clients->hasPages())
-    <div class="pagination">
-        {{ $clients->links('pagination::simple-bootstrap-5') }}
-        <span class="page-info">{{ $clients->firstItem() }}–{{ $clients->lastItem() }} dari {{ $clients->total() }}</span>
+    <div style="padding:14px 16px;display:flex;align-items:center;
+                justify-content:space-between;border-top:1px solid #f1f5f9">
+        {{ $clients->withQueryString()->links() }}
+        <span style="font-size:12px;color:#94a3b8">
+            {{ $clients->firstItem() }}–{{ $clients->lastItem() }}
+            dari {{ $clients->total() }}
+        </span>
     </div>
     @endif
 </div>

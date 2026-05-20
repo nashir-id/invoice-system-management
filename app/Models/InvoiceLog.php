@@ -6,9 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class InvoiceLog extends Model
 {
-    // -------------------------------------------------------
-    // FILLABLE
-    // -------------------------------------------------------
+    
     protected $fillable = [
         'invoice_id',  // FK ke tabel invoices
         'user_id',     // FK ke tabel users (siapa yang melakukan)

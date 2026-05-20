@@ -7,17 +7,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Client extends Model
 {
-    use HasFactory;
     protected $fillable = [
-        'company_name',
-        'pic_name',
-        'phone',
-        'email',
-        'website',
-        'address',
-        'notes',
-        'is_active',
-    ];
+    'company_name',        
+    'pic_name',
+    'phone',
+    'email',
+    'website',
+    'address',
+    'notes',
+    'is_active',
+];
 
     
     // CASTS

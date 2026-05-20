@@ -23,31 +23,31 @@
         <div class="card-body">
             <div style="display:flex;flex-direction:column;gap:12px">
                 <div>
-                    <div style="font-size:11px;color:#94a3b8;margin-bottom:3px">Nama Perusahaan</div>
+                    <div style="font-size:15px;color:#94a3b8;margin-bottom:3px">Nama Perusahaan</div>
                     <div style="font-weight:600">{{ $client->company_name }}</div>
                 </div>
                 @if($client->pic_name)
                 <div>
-                    <div style="font-size:11px;color:#94a3b8;margin-bottom:3px">PIC</div>
+                    <div style="font-size:15px;color:#94a3b8;margin-bottom:3px">PIC</div>
                     <div>{{ $client->pic_name }}</div>
                 </div>
                 @endif
                 @if($client->phone)
                 <div>
-                    <div style="font-size:11px;color:#94a3b8;margin-bottom:3px">WhatsApp</div>
+                    <div style="font-size:15px;color:#94a3b8;margin-bottom:3px">WhatsApp</div>
                     <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $client->phone) }}" target="_blank"
-                       style="color:#16a34a;text-decoration:none;font-size:13px">{{ $client->phone }}</a>
+                       style="color:#16a34a;text-decoration:none;font-size:15px">{{ $client->phone }}</a>
                 </div>
                 @endif
                 @if($client->email)
                 <div>
-                    <div style="font-size:11px;color:#94a3b8;margin-bottom:3px">Email</div>
+                    <div style="font-size:15px;color:#94a3b8;margin-bottom:3px">Email</div>
                     <a href="mailto:{{ $client->email }}" style="color:#4f46e5;text-decoration:none">{{ $client->email }}</a>
                 </div>
                 @endif
                 @if($client->website)
                 <div>
-                    <div style="font-size:11px;color:#94a3b8;margin-bottom:3px">Website</div>
+                    <div style="font-size:15px;color:#94a3b8;margin-bottom:3px">Website</div>
                     <a href="https://{{ $client->website }}" target="_blank" style="color:#4f46e5;text-decoration:none">{{ $client->website }}</a>
                 </div>
                 @endif

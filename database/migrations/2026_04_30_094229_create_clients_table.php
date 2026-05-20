@@ -13,16 +13,16 @@ public function up(): void
 {
     Schema::create('clients', function (Blueprint $table) {
         $table->id();
-        $table->string('name'); // nama perusahaan
-        $table->string('pic_name'); // nama PIC
-        $table->string('phone');
+        $table->string('company_name');        // ← ganti dari 'name'
+        $table->string('pic_name')->nullable(); // ← tambah nullable
+        $table->string('phone')->nullable();    // ← tambah nullable
         $table->string('email')->nullable();
         $table->string('website')->nullable();
         $table->text('address')->nullable();
         $table->text('notes')->nullable();
         $table->boolean('is_active')->default(true);
         $table->timestamps();
-     });
+    });
 }
 
     /**

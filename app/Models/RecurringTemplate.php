@@ -9,18 +9,16 @@ class RecurringTemplate extends Model
 {
     use HasFactory;
 
-    // -------------------------------------------------------
-    // FILLABLE
-    // -------------------------------------------------------
+    
     protected $fillable = [
-        'client_id',      // FK ke tabel clients
-        'invoice_id',     // FK ke invoice pertama (sebagai template)
-        'template_name',  // nama template, contoh: "SEO Bulanan PPLI"
-        'mode',           // 'auto' atau 'manual'
-        'generate_day',   // tanggal generate tiap bulan (1-28)
-        'status',         // 'active', 'paused', 'inactive'
-        'last_generated', // tanggal terakhir invoice digenerate
-        'notes',          // catatan tambahan
+        'client_id',
+        'invoice_id',
+        'template_name',  
+        'mode',          
+        'generate_day',  
+        'status',        
+        'last_generated', 
+        'notes',         
     ];
 
     // -------------------------------------------------------
@@ -34,38 +32,23 @@ class RecurringTemplate extends Model
         ];
     }
 
-    // -------------------------------------------------------
-    // RELASI
-    // -------------------------------------------------------
-
-    // Template MILIK satu Client
-    // Contoh: $template->client → data klien
-    // Contoh: $template->client->company_name → "PT. PPLI"
     public function client()
     {
         return $this->belongsTo(Client::class);
     }
 
-    // Template MERUJUK ke satu Invoice (sebagai acuan template)
-    // Contoh: $template->invoice → invoice pertama yang jadi template
     public function invoice()
     {
         return $this->belongsTo(Invoice::class);
     }
 
-    // -------------------------------------------------------
-    // SCOPES
-    // -------------------------------------------------------
 
-    // Hanya template yang aktif
-    // Contoh: RecurringTemplate::active()->get()
     public function scopeActive($query)
     {
         return $query->where('status', 'active');
     }
 
-    // Template mode otomatis
-    // Contoh: RecurringTemplate::autoMode()->get()
+    
     public function scopeAutoMode($query)
     {
         return $query->where('mode', 'auto');

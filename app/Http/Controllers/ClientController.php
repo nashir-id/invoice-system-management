@@ -45,15 +45,16 @@ class ClientController extends Controller
      * Simpan klien baru
      */
     public function store(StoreClientRequest $request)
-    {
-        $client = Client::create(array_merge(
-            $request->validated(),
-            ['is_active' => true]
-        ));
+{
+    $client = Client::create(array_merge(
+        $request->validated(),
+        ['is_active' => true]
+    ));
 
-        return redirect()->route('clients.show', $client)
-            ->with('success', "Klien {$client->company_name} berhasil ditambahkan.");
-    }
+    // redirect ke INDEX agar tombol Tambah Klien tetap terlihat
+    return redirect()->route('clients.index')
+        ->with('success', "Klien {$client->company_name} berhasil ditambahkan.");
+}
 
     /**
      * Halaman profil klien — semua invoice terkait

@@ -92,6 +92,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('settings.audit-log');
     });
     
+    Route::middleware(['role:owner'])->group(function () {
+    Route::delete('invoices/{invoice}/pay', [PaymentController::class, 'destroy'])
+        ->name('invoices.pay.cancel');
+});
+    
 });
 
 require __DIR__.'/auth.php';
