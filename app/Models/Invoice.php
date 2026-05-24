@@ -13,23 +13,23 @@ class Invoice extends Model
     use HasFactory;
 
     protected $fillable = [
-        'client_id',        // FK ke tabel clients
-        'created_by',       // FK ke tabel users (siapa yang buat)
-        'voucher_id',       // FK ke tabel vouchers (nullable)
-        'invoice_number',   // nomor invoice, contoh: INV010426-PPLI
-        'type',             // 'one_time' atau 'recurring'
-        'invoice_date',     // tanggal invoice diterbitkan
-        'due_date',         // tanggal jatuh tempo
-        'use_ppn',          // toggle PPN 11% (true/false)
-        'subtotal',         // total sebelum diskon & PPN
-        'discount',         // nominal diskon dari voucher
-        'ppn_amount',       // nominal PPN (jika aktif)
-        'total',            // total akhir yang harus dibayar
-        'status',           // 'unpaid', 'paid', 'overdue'
-        'terms_conditions', // terms & conditions (teks bebas)
-        'estimation',       // estimasi pengerjaan, contoh: "30 hari kerja"
-        'notes',            // catatan internal
-        'public_token',     // token unik untuk link publik WhatsApp
+        'client_id',
+        'created_by',
+        'voucher_id',
+        'invoice_number',
+        'type',
+        'invoice_date',
+        'due_date',
+        'use_ppn',
+        'subtotal',
+        'discount',
+        'ppn_amount',
+        'total',
+        'status',
+        'terms_conditions',
+        'estimation',
+        'notes',
+        'public_token',
     ];
 
     protected function casts(): array
@@ -45,7 +45,8 @@ class Invoice extends Model
         ];
     }
 
-    
+    // ── Relasi aktif ─────────────────────────────────────────
+
     public function client(): BelongsTo
     {
         return $this->belongsTo(Client::class);
@@ -66,27 +67,30 @@ class Invoice extends Model
         return $this->belongsTo(Voucher::class);
     }
 
-    public function payment(): HasOne
-    {
-        return $this->hasOne(Payment::class);
-    }
-
     public function logs(): HasMany
     {
         return $this->hasMany(InvoiceLog::class);
     }
 
-    public function notifications(): HasMany
-    {
-        return $this->hasMany(NotificationLog::class);
-    }
+    // ── Relasi belum siap (uncomment jika modelnya sudah dibuat) ──
 
-    public function recurringTemplate(): HasOne
-    {
-        return $this->hasOne(RecurringTemplate::class);
-    }
+    // public function payment(): HasOne
+    // {
+    //     return $this->hasOne(Payment::class);
+    // }
 
-    
+    // public function notifications(): HasMany
+    // {
+    //     return $this->hasMany(NotificationLog::class);
+    // }
+
+    // public function recurringTemplate(): HasOne
+    // {
+    //     return $this->hasOne(RecurringTemplate::class);
+    // }
+
+    // ── Scopes ───────────────────────────────────────────────
+
     public function scopeUnpaid($query)
     {
         return $query->where('status', 'unpaid');
@@ -117,6 +121,7 @@ class Invoice extends Model
         return $query->whereBetween('invoice_date', [$from, $to]);
     }
 
+    // ── Accessors ────────────────────────────────────────────
 
     public function getStatusLabelAttribute(): string
     {
@@ -144,6 +149,8 @@ class Invoice extends Model
             && $this->due_date
             && $this->due_date->isPast();
     }
+
+    // ── Static helpers ───────────────────────────────────────
 
     public static function generateNumber(Client $client): string
     {

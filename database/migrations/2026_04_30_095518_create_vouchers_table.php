@@ -15,9 +15,11 @@ public function up(): void
         $table->id();
         $table->string('code')->unique();
         $table->decimal('discount_amount', 15, 2);
+        $table->string('description')->nullable(); // ← tambah
         $table->boolean('is_active')->default(true);
+        $table->date('valid_until')->nullable();   // ← tambah
         $table->timestamps();
-     });
+    });
 }
 
     /**

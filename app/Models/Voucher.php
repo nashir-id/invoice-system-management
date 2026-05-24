@@ -9,10 +9,7 @@ class Voucher extends Model
 {
     use HasFactory;
 
-    // -------------------------------------------------------
-    // FILLABLE
-    // -------------------------------------------------------
-    protected $fillable = [
+        protected $fillable = [
         'code',             // kode promo, contoh: "DISC10"
         'discount_amount',  // nominal diskon dalam rupiah
         'is_active',        // status aktif / nonaktif
@@ -32,24 +29,11 @@ class Voucher extends Model
         ];
     }
 
-    // -------------------------------------------------------
-    // RELASI
-    // -------------------------------------------------------
-
-    // Voucher DIPAKAI di BANYAK Invoice
-    // Contoh: $voucher->invoices → semua invoice yang pakai voucher ini
-    // Contoh: $voucher->invoices->count() → berapa kali dipakai
     public function invoices()
     {
         return $this->hasMany(Invoice::class);
     }
 
-    // -------------------------------------------------------
-    // SCOPES
-    // -------------------------------------------------------
-
-    // Hanya voucher yang aktif
-    // Contoh: Voucher::active()->get()
     public function scopeActive($query)
     {
         return $query->where('is_active', true);
@@ -66,12 +50,7 @@ class Voucher extends Model
             });
     }
 
-    // -------------------------------------------------------
-    // STATIC HELPER
-    // -------------------------------------------------------
-
-    // Cari voucher valid berdasarkan kode
-    // Contoh: Voucher::findByCode('DISC10')
+   
     public static function findByCode(string $code): ?self
     {
         return static::valid()

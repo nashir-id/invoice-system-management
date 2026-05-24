@@ -249,13 +249,17 @@
         </a>
         
         <div class="sb-group-label" style="margin-top:8px">Pengaturan</div>
-        <a href="{{ route('users.index') }}" class="sb-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
-            <svg viewBox="0 0 16 16" fill="none">
-                <circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/>
-                <path d="M1 14c0-3 2.2-4.5 5-4.5M10 10l2 2 3-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
-            User
-        </a>
+        <a href="{{ route('profile.edit') }}" class="sb-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+    <svg viewBox="0 0 16 16" fill="none">
+        <circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/>
+        <path d="M1 14c0-3 2.2-4.5 5-4.5M10 10l2 2 3-3"
+              stroke="currentColor"
+              stroke-width="1.3"
+              stroke-linecap="round"
+              stroke-linejoin="round"/>
+    </svg>
+    Profile
+</a>
         <a href="{{ route('settings.index') }}" class="sb-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
             <svg viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/>

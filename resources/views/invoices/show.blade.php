@@ -316,7 +316,6 @@
     <div class="right-panel">
 
         {{-- Form Tandai Lunas --}}
-        @adminup
         @if($invoice->status !== 'paid')
         <div class="pay-form">
             <div class="pay-form-head">
@@ -400,7 +399,6 @@
             @endowneronly
         </div>
         @endif
-        @endadminup
 
         {{-- Aksi lain --}}
         <div class="card">
@@ -425,7 +423,6 @@
                     <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v8M5 7l3 3 3-3M3 13h10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     Download PDF
                 </a>
-                @adminup
                 {{-- Duplikat --}}
                 <form method="POST" action="{{ route('invoices.duplicate', $invoice) }}">
                     @csrf
@@ -445,7 +442,6 @@
                     </button>
                 </form>
                 @endif
-                @endadminup
             </div>
         </div>
 

@@ -12,42 +12,29 @@ use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Daftar semua invoice dengan filter & search
-     */
     public function index(Request $request)
     {
-        $query = Invoice::with(['client', 'payment', 'creator'])
+        $query = Invoice::with(['client', 'creator'])
             ->latest('invoice_date');
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-
-        // Filter klien
         if ($request->filled('client_id')) {
             $query->forClient($request->client_id);
         }
-
-        // Filter tipe
         if ($request->filled('type')) {
             $query->ofType($request->type);
         }
-
-        // Filter rentang tanggal
         if ($request->filled('date_from') && $request->filled('date_to')) {
             $query->inDateRange($request->date_from, $request->date_to);
         }
-
-        // Search nomor invoice
         if ($request->filled('search')) {
             $query->where('invoice_number', 'like', '%' . $request->search . '%');
         }
 
         $invoices = $query->paginate(15)->withQueryString();
 
-        // Statistik header
         $stats = [
             'all'     => Invoice::count(),
             'unpaid'  => Invoice::unpaid()->count(),
@@ -60,33 +47,22 @@ class InvoiceController extends Controller
         return view('invoices.index', compact('invoices', 'stats', 'clients'));
     }
 
-    /**
-     * Form buat invoice baru
-     */
     public function create()
     {
-        $clients     = Client::active()->orderBy('company_name')->get();
-        $defaultTnC  = config('invoice.default_terms', 'Pembayaran dilakukan melalui transfer bank.');
+        $clients    = Client::active()->orderBy('company_name')->get();
+        $defaultTnC = config('invoice.default_terms', 'Pembayaran dilakukan melalui transfer bank.');
         return view('invoices.create', compact('clients', 'defaultTnC'));
     }
 
-    /**
-     * Simpan invoice baru
-     */
     public function store(StoreInvoiceRequest $request)
     {
         $data = $request->validated();
 
-        // 1. Ambil data klien
-        $client = Client::findOrFail($data['client_id']);
-
-        // 2. Generate nomor invoice otomatis
+        $client        = Client::findOrFail($data['client_id']);
         $invoiceNumber = Invoice::generateNumber($client);
 
-        // 3. Hitung subtotal dari semua item
         $subtotal = collect($data['items'])->sum(fn($item) => $item['price'] * $item['quantity']);
 
-        // 4. Hitung diskon dari voucher (jika ada)
         $discount  = 0;
         $voucherId = null;
         if (!empty($data['voucher_code'])) {
@@ -97,13 +73,11 @@ class InvoiceController extends Controller
             }
         }
 
-        // 5. Hitung PPN 11%
         $usePN     = $request->boolean('use_ppn');
         $afterDisc = $subtotal - $discount;
         $ppnAmount = $usePN ? round($afterDisc * 0.11) : 0;
         $total     = $afterDisc + $ppnAmount;
 
-        // 6. Buat invoice
         $invoice = Invoice::create([
             'client_id'        => $client->id,
             'created_by'       => auth()->id(),
@@ -124,7 +98,6 @@ class InvoiceController extends Controller
             'public_token'     => \Str::random(32),
         ]);
 
-        // 7. Simpan semua item
         foreach ($data['items'] as $item) {
             InvoiceItem::create([
                 'invoice_id'   => $invoice->id,
@@ -136,25 +109,18 @@ class InvoiceController extends Controller
             ]);
         }
 
-        // 8. Catat log
         InvoiceLog::record($invoice, 'created', "Invoice {$invoiceNumber} dibuat oleh " . auth()->user()->name);
 
         return redirect()->route('invoices.show', $invoice)
             ->with('success', "Invoice {$invoiceNumber} berhasil dibuat.");
     }
 
-    /**
-     * Halaman detail invoice
-     */
     public function show(Invoice $invoice)
     {
-        $invoice->load(['client', 'items', 'voucher', 'payment', 'creator', 'logs.user']);
+        $invoice->load(['client', 'items', 'voucher', 'creator', 'logs.user']);
         return view('invoices.show', compact('invoice'));
     }
 
-    /**
-     * Form edit invoice (hanya status UNPAID)
-     */
     public function edit(Invoice $invoice)
     {
         if ($invoice->status === 'paid') {
@@ -168,9 +134,6 @@ class InvoiceController extends Controller
         return view('invoices.edit', compact('invoice', 'clients', 'defaultTnC'));
     }
 
-    /**
-     * Update invoice
-     */
     public function update(StoreInvoiceRequest $request, Invoice $invoice)
     {
         if ($invoice->status === 'paid') {
@@ -180,7 +143,6 @@ class InvoiceController extends Controller
         $data   = $request->validated();
         $client = Client::findOrFail($data['client_id']);
 
-        // Hitung ulang
         $subtotal  = collect($data['items'])->sum(fn($i) => $i['price'] * $i['quantity']);
         $discount  = 0;
         $voucherId = $invoice->voucher_id;
@@ -198,7 +160,6 @@ class InvoiceController extends Controller
         $ppnAmount = $usePN ? round($afterDisc * 0.11) : 0;
         $total     = $afterDisc + $ppnAmount;
 
-        // Update invoice
         $invoice->update([
             'client_id'        => $client->id,
             'voucher_id'       => $voucherId,
@@ -215,7 +176,6 @@ class InvoiceController extends Controller
             'notes'            => $data['notes'] ?? null,
         ]);
 
-        // Hapus item lama, simpan item baru
         $invoice->items()->delete();
         foreach ($data['items'] as $item) {
             InvoiceItem::create([
@@ -234,9 +194,6 @@ class InvoiceController extends Controller
             ->with('success', "Invoice {$invoice->invoice_number} berhasil diperbarui.");
     }
 
-    /**
-     * Hapus invoice (hanya UNPAID / DRAFT)
-     */
     public function destroy(Invoice $invoice)
     {
         if ($invoice->status === 'paid') {
@@ -252,9 +209,6 @@ class InvoiceController extends Controller
             ->with('success', "Invoice {$number} berhasil dihapus.");
     }
 
-    /**
-     * Duplikat invoice untuk klien yang sama
-     */
     public function duplicate(Invoice $invoice)
     {
         $newInvoice = $invoice->replicate(['invoice_number', 'status', 'public_token']);
@@ -266,7 +220,7 @@ class InvoiceController extends Controller
         $newInvoice->save();
 
         foreach ($invoice->items as $item) {
-            $newItem = $item->replicate(['invoice_id']);
+            $newItem             = $item->replicate(['invoice_id']);
             $newItem->invoice_id = $newInvoice->id;
             $newItem->save();
         }
@@ -277,9 +231,6 @@ class InvoiceController extends Controller
             ->with('success', "Invoice berhasil diduplikat menjadi {$newInvoice->invoice_number}.");
     }
 
-    /**
-     * Halaman invoice publik (via link WhatsApp)
-     */
     public function publicView(string $token)
     {
         $invoice = Invoice::where('public_token', $token)
@@ -289,17 +240,17 @@ class InvoiceController extends Controller
         return view('invoices.public', compact('invoice'));
     }
 
-    /**
-     * AJAX — generate link WhatsApp
-     */
     public function whatsappLink(Invoice $invoice)
     {
         $invoice->load('client');
         $phone   = preg_replace('/[^0-9]/', '', $invoice->client->phone ?? '');
-        $phone   = ltrim($phone, '0');
-        $phone   = '62' . $phone;
+        $phone   = '62' . ltrim($phone, '0');
         $url     = route('invoice.public', $invoice->public_token);
-        $message = urlencode("Halo {$invoice->client->pic_name},\n\nBerikut invoice {$invoice->invoice_number} dari NASHIR.ID:\n{$url}\n\nTotal: Rp " . number_format($invoice->total, 0, ',', '.') . "\n\nTerima kasih.");
+        $message = urlencode(
+            "Halo {$invoice->client->pic_name},\n\n" .
+            "Berikut invoice {$invoice->invoice_number} dari NASHIR.ID:\n{$url}\n\n" .
+            "Total: Rp " . number_format($invoice->total, 0, ',', '.') . "\n\nTerima kasih."
+        );
 
         return response()->json(['url' => "https://wa.me/{$phone}?text={$message}"]);
     }

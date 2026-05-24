@@ -16,7 +16,6 @@
     <div style="font-size:14px;color:#64748b">
         Total <strong>{{ $clients->total() }}</strong> klien terdaftar
     </div>
-    {{-- Tombol tambah klien langsung di sini, tidak pakai topbar-actions --}}
     <a href="{{ route('clients.create') }}" class="btn btn-primary">
         <svg viewBox="0 0 16 16" fill="none" style="width:14px;height:14px">
             <path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
@@ -123,14 +122,17 @@
                                 <form method="POST"
                                       action="{{ route('clients.destroy', $client) }}"
                                       onsubmit="return confirm('Nonaktifkan klien {{ addslashes($client->company_name) }}?')">
-                                    @csrf @method('DELETE')
+                                    @csrf
+                                    @method('DELETE')
                                     <button type="submit" class="btn btn-danger btn-sm">
                                         Nonaktifkan
                                     </button>
                                 </form>
                             @else
-                                <form method="POST" action="{{ route('clients.activate', $client) }}">
+                                <form method="POST" action="{{ route('clients.activate', $client) }}"
+                                      onsubmit="return confirm('Aktifkan kembali klien {{ addslashes($client->company_name) }}?')">
                                     @csrf
+                                    @method('PATCH')
                                     <button type="submit" class="btn btn-success btn-sm">
                                         Aktifkan
                                     </button>

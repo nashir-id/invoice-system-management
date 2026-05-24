@@ -7,9 +7,9 @@ use Illuminate\Foundation\Http\FormRequest;
 class StoreInvoiceRequest extends FormRequest
 {
     public function authorize(): bool
-    {
-        return auth()->user()->hasRole(['owner', 'admin']);
-    }
+{
+    return auth()->check();
+}
 
     public function rules(): array
     {
