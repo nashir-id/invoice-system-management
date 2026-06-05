@@ -12,7 +12,7 @@
 
         /* ── Sidebar ── */
         .sidebar {
-            width: 220px; min-width: 220px; background: #1b1669;
+            width: 220px; min-width: 220px; background: #220c70;
             display: flex; flex-direction: column;
             min-height: 100vh; position: sticky; top: 0; height: 100vh;
         }
@@ -43,7 +43,9 @@
             width: 30px; height: 30px; border-radius: 50%;
             background: #534AB7; display: flex; align-items: center;
             justify-content: center; font-size: 11px; font-weight: 600; color: #fff; flex-shrink: 0;
+            overflow: hidden;
         }
+        .sb-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
         .sb-uname { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 500; }
         .sb-role  { font-size: 10px; color: rgba(255,255,255,0.35); }
         .sb-logout {
@@ -272,7 +274,13 @@
 
     <div class="sb-footer">
         <div class="sb-user">
-            <div class="sb-avatar">{{ strtoupper(substr(auth()->user()->name, 0, 2)) }}</div>
+            <div class="sb-avatar">
+                @if(auth()->user()->profile_photo_url)
+                    <img src="{{ auth()->user()->profile_photo_url }}" alt="{{ auth()->user()->name }}">
+                @else
+                    {{ strtoupper(substr(auth()->user()->name, 0, 2)) }}
+                @endif
+            </div>
             <div>
                 <div class="sb-uname">{{ Str::limit(auth()->user()->name, 18) }}</div>
                 <div class="sb-role">{{ ucfirst(auth()->user()->role) }}</div>

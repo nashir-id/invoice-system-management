@@ -75,6 +75,14 @@
         transition: background .15s;
     }
     .btn-filter:hover { background: #4f46e5; }
+    .btn-export {
+        padding: .45rem 1rem; border-radius: 8px;
+        background: #16a34a; color: #fff; border: none;
+        font-size: .83rem; font-weight: 600; text-decoration: none;
+        display: inline-flex; align-items: center; gap: .35rem;
+        transition: background .15s;
+    }
+    .btn-export:hover { background: #15803d; color: #fff; }
 
     /* Chart */
     .chart-wrap { position: relative; height: 260px; }
@@ -137,6 +145,9 @@
             <button type="submit" class="btn-filter">
                 <i class="bi bi-arrow-clockwise me-1"></i> Terapkan
             </button>
+            <a href="{{ route('reports.export-excel') }}" class="btn-export">
+                <i class="bi bi-file-earmark-excel"></i> Download Excel
+            </a>
         </div>
     </form>
 

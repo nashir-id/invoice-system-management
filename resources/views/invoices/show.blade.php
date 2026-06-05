@@ -261,15 +261,15 @@
                     <div class="inv-bank-title">Informasi Pembayaran</div>
                     <div class="inv-bank-item">
                         <span>Mandiri</span>
-                        <span>1234567890 a/n M. Nashirudin Rabbani</span>
+                        <span>1234567890 a/n Dimas permana</span>
                     </div>
                     <div class="inv-bank-item">
                         <span>BCA</span>
-                        <span>0987654321 a/n M. Nashirudin Rabbani</span>
+                        <span>0987654321 a/n Dimas permana</span>
                     </div>
                     <div class="inv-bank-item">
                         <span>SeaBank</span>
-                        <span>1122334455 a/n M. Nashirudin Rabbani</span>
+                        <span>1122334455 a/n Dimas permana</span>
                     </div>
                 </div>
 
@@ -330,19 +330,16 @@
                     <div class="bank-options">
                         <label class="bank-opt" id="bank-mandiri">
                             <input type="radio" name="bank" value="mandiri" onchange="selectBank('mandiri')">
-                            <div style="font-size:18px">🏦</div>
                             <div class="bank-name">Mandiri</div>
                             <div class="bank-acc">1234567890</div>
                         </label>
                         <label class="bank-opt" id="bank-bca">
                             <input type="radio" name="bank" value="bca" onchange="selectBank('bca')">
-                            <div style="font-size:18px">🏦</div>
                             <div class="bank-name">BCA</div>
                             <div class="bank-acc">0987654321</div>
                         </label>
                         <label class="bank-opt" id="bank-seabank">
                             <input type="radio" name="bank" value="seabank" onchange="selectBank('seabank')">
-                            <div style="font-size:18px">🏦</div>
                             <div class="bank-name">SeaBank</div>
                             <div class="bank-acc">1122334455</div>
                         </label>
@@ -382,13 +379,12 @@
         @else
         {{-- Sudah lunas --}}
         <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;padding:16px;text-align:center">
-            <div style="font-size:28px;margin-bottom:8px">✅</div>
             <div style="font-size:14px;font-weight:600;color:#166534">Invoice Lunas</div>
             <div style="font-size:12px;color:#4ade80;margin-top:4px">
                 {{ $invoice->payment?->paid_at->format('d M Y') }}
                 via {{ $invoice->payment?->bank_label }}
             </div>
-            @owneronly
+            
             <form method="POST" action="{{ route('invoices.pay.cancel', $invoice) }}" style="margin-top:12px"
                   onsubmit="return confirm('Batalkan pembayaran ini?')">
                 @csrf @method('DELETE')
@@ -396,7 +392,7 @@
                     Batalkan Pembayaran
                 </button>
             </form>
-            @endowneronly
+            
         </div>
         @endif
 
@@ -405,18 +401,18 @@
             <div class="card-header"><span class="card-title">Aksi</span></div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:8px;padding:14px">
                 {{-- Kirim email --}}
-                <form method="POST" action="{{ route('invoices.send-email', $invoice) }}">
+                <!-- <form method="POST" action="{{ route('invoices.send-email', $invoice) }}">
                     @csrf
                     <button type="submit" class="btn btn-outline" style="width:100%;justify-content:center">
                         <svg viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="10" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M1 5l7 5 7-5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
                         Kirim via Email
                     </button>
-                </form>
+                </form> -->
                 {{-- Link WhatsApp --}}
-                <button onclick="sendWhatsApp()" class="btn btn-outline" style="width:100%;justify-content:center;color:#16a34a;border-color:#bbf7d0">
+                <!-- <button onclick="sendWhatsApp()" class="btn btn-outline" style="width:100%;justify-content:center;color:#16a34a;border-color:#bbf7d0">
                     <svg viewBox="0 0 16 16" fill="none"><path d="M13.5 2.5A6.5 6.5 0 1 0 4.2 12.3L2 14l1.8-2.1A6.5 6.5 0 0 0 13.5 2.5z" stroke="currentColor" stroke-width="1.3"/></svg>
                     Salin Link WhatsApp
-                </button>
+                </button> -->
                 {{-- Download PDF --}}
                 <a href="{{ route('invoices.download', $invoice) }}" target="_blank"
                    class="btn btn-outline" style="width:100%;justify-content:center">

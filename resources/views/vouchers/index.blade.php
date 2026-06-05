@@ -79,9 +79,15 @@
                             <span style="color:#94a3b8">Tidak ada</span>
                         @endif
                     </td>
-                    <td style="text-align:center;color:#94a3b8;font-size:12px">
-    —
-</td>
+                    <td style="text-align:center">
+                        @if($voucher->invoices_count > 0)
+                            <span class="badge badge-paid">
+                                Dipakai {{ $voucher->invoices_count }}x
+                            </span>
+                        @else
+                            <span class="badge badge-inactive">Belum dipakai</span>
+                        @endif
+                    </td>
                     <td>
                         @if($voucher->is_active && (!$voucher->valid_until || !$voucher->valid_until->isPast()))
                             <span class="badge badge-active">Aktif</span>

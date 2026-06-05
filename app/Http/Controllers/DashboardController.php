@@ -29,7 +29,7 @@ class DashboardController extends Controller
         ];
 
         // 10 invoice terbaru
-        $recentInvoices = Invoice::with(['client', 'payment'])
+        $recentInvoices = Invoice::with(['client'])
             ->latest('invoice_date')
             ->limit(10)
             ->get();

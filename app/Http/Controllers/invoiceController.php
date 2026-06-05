@@ -8,6 +8,7 @@ use App\Models\Voucher;
 use App\Models\InvoiceItem;
 use App\Models\InvoiceLog;
 use App\Http\Requests\StoreInvoiceRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class InvoiceController extends Controller
@@ -117,8 +118,19 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice)
     {
-        $invoice->load(['client', 'items', 'voucher', 'creator', 'logs.user']);
+        $invoice->load(['client', 'items', 'voucher', 'creator', 'payment', 'logs.user']);
         return view('invoices.show', compact('invoice'));
+    }
+
+    public function download(Invoice $invoice)
+    {
+        $invoice->load(['client', 'items', 'voucher', 'payment']);
+
+        $filename = $invoice->invoice_number . '.pdf';
+
+        return Pdf::loadView('invoices.pdf', compact('invoice'))
+            ->setPaper('a4')
+            ->download($filename);
     }
 
     public function edit(Invoice $invoice)
@@ -129,7 +141,7 @@ class InvoiceController extends Controller
 
         $clients    = Client::active()->orderBy('company_name')->get();
         $defaultTnC = config('invoice.default_terms', '');
-        $invoice->load('items');
+        $invoice->load(['items', 'voucher']);
 
         return view('invoices.edit', compact('invoice', 'clients', 'defaultTnC'));
     }
@@ -144,7 +156,7 @@ class InvoiceController extends Controller
         $client = Client::findOrFail($data['client_id']);
 
         $subtotal  = collect($data['items'])->sum(fn($i) => $i['price'] * $i['quantity']);
-        $discount  = 0;
+        $discount  = $invoice->discount;
         $voucherId = $invoice->voucher_id;
 
         if (!empty($data['voucher_code'])) {

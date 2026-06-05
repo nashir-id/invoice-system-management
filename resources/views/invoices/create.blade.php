@@ -119,12 +119,12 @@
     }
     .btn-add-item:hover { background: #3C3489; }
     .btn-remove {
-        width: 26px; height: 26px; border-radius: 6px;
-        border: 1px solid #e5e7eb; background: #fff;
-        color: #9ca3af; font-size: .82rem; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; transition: all .15s;
+        min-width: 68px; height: 30px; border-radius: 6px;
+        border: 1px solid #fecaca; background: #fff7f7;
+        color: #dc2626; font-size: .78rem; font-weight: 600; cursor: pointer;
+        display: inline-flex; align-items: center; justify-content: center; gap: 5px; transition: all .15s;
     }
-    .btn-remove:hover:not(:disabled) { border-color: #fecaca; color: #ef4444; background: #fff7f7; }
+    .btn-remove:hover:not(:disabled) { border-color: #fca5a5; color: #b91c1c; background: #fee2e2; }
     .btn-remove:disabled { opacity: .3; cursor: not-allowed; }
 
     /* ── Summary ── */
@@ -266,14 +266,9 @@
                                 <label class="inv-label">Tipe invoice <span class="req">*</span></label>
                                 <div class="type-pills">
                                     <div class="type-pill">
-                                        <input type="radio" name="type" id="type_proforma"
-                                            value="proforma" {{ old('type','proforma') == 'proforma' ? 'checked' : '' }} required>
-                                        <label for="type_proforma">Proforma</label>
-                                    </div>
-                                    <div class="type-pill">
-                                        <input type="radio" name="type" id="type_commercial"
-                                            value="commercial" {{ old('type') == 'commercial' ? 'checked' : '' }}>
-                                        <label for="type_commercial">Commercial</label>
+                                        <input type="radio" name="type" id="type_one_time"
+                                            value="one_time" {{ old('type','one_time') == 'one_time' ? 'checked' : '' }} required>
+                                        <label for="type_one_time">One-Time</label>
                                     </div>
                                     <div class="type-pill">
                                         <input type="radio" name="type" id="type_recurring"
@@ -325,7 +320,6 @@
                                 <div id="voucherInfo"></div>
                                 @error('voucher_code')<p class="inv-error">{{ $message }}</p>@enderror
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -350,7 +344,7 @@
                                     <th style="width:17%">Harga (Rp)</th>
                                     <th style="width:8%">Qty</th>
                                     <th style="width:15%; text-align:right">Subtotal</th>
-                                    <th style="width:5%"></th>
+                                    <th style="width:10%">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody id="itemsBody">
@@ -362,7 +356,7 @@
                                     <td class="subtotal-cell">—</td>
                                     <td style="text-align:center">
                                         <button type="button" class="btn-remove remove-item" disabled>
-                                            <i class="bi bi-trash3"></i>
+                                            Hapus
                                         </button>
                                     </td>
                                 </tr>
@@ -492,7 +486,7 @@
             '<td><input type="number" name="items[' + idx + '][price]"        class="inv-input item-price" placeholder="0" min="0" required></td>' +
             '<td><input type="number" name="items[' + idx + '][quantity]"     class="inv-input item-qty" value="1" min="1" required></td>' +
             '<td class="subtotal-cell">—</td>' +
-            '<td style="text-align:center"><button type="button" class="btn-remove remove-item"><i class="bi bi-trash3"></i></button></td>';
+            '<td style="text-align:center"><button type="button" class="btn-remove remove-item">Hapus</button></td>';
         return tr;
     }
 
@@ -535,8 +529,15 @@
         this.disabled    = true;
         this.textContent = '...';
 
-        fetch('/vouchers/check?code=' + encodeURIComponent(code), {
-            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        fetch('{{ route('vouchers.validate') }}', {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ code: code })
         })
         .then(function(r) { return r.json(); })
         .then(function(data) {

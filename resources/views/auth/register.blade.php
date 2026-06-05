@@ -114,6 +114,13 @@
             transform: translateY(-50%);
             color: #bbb; width: 16px; height: 16px; pointer-events: none;
         }
+        .eye-btn {
+            position: absolute; right: 12px; top: 50%;
+            transform: translateY(-50%);
+            background: none; border: none; cursor: pointer;
+            color: #bbb; display: flex; align-items: center; padding: 0;
+        }
+        .eye-btn:hover { color: #888; }
         
         input[type="email"],
         input[type="password"],
@@ -195,7 +202,7 @@
                     </div>
                 </div>
 
-                <div class="field">
+                <!-- <div class="field">
                     <div class="input-wrap">
                         <svg class="input-icon" viewBox="0 0 16 16" fill="none">
                             <rect x="2" y="2" width="12" height="12" rx="2" stroke="currentColor" stroke-width="1.3"/>
@@ -207,7 +214,7 @@
                             <option value="staff">Staff</option>
                         </select>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <div class="field">
@@ -227,7 +234,13 @@
                             <rect x="2" y="7" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.3"/>
                             <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
                         </svg>
-                        <input type="password" name="password" placeholder="Password" class="{{ $errors->has('password') ? 'err' : '' }}">
+                        <input id="password" type="password" name="password" placeholder="Password" class="{{ $errors->has('password') ? 'err' : '' }}">
+                        <button type="button" class="eye-btn" onclick="togglePassword('password', 'eye-password')" aria-label="Tampilkan password">
+                            <svg id="eye-password" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/>
+                                <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
 
@@ -237,7 +250,13 @@
                             <rect x="2" y="7" width="12" height="8" rx="2" stroke="currentColor" stroke-width="1.3"/>
                             <path d="M5 7V5a3 3 0 016 0v2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
                         </svg>
-                        <input type="password" name="password_confirmation" placeholder="Confirm Password">
+                        <input id="password_confirmation" type="password" name="password_confirmation" placeholder="Confirm Password">
+                        <button type="button" class="eye-btn" onclick="togglePassword('password_confirmation', 'eye-password-confirmation')" aria-label="Tampilkan konfirmasi password">
+                            <svg id="eye-password-confirmation" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/>
+                                <circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -247,5 +266,19 @@
     </div>
 </div>
 
+<script>
+function togglePassword(inputId, eyeId) {
+    const input = document.getElementById(inputId);
+    const eye = document.getElementById(eyeId);
+
+    if (input.type === 'password') {
+        input.type = 'text';
+        eye.innerHTML = '<path d="M2 2l12 12M6.5 6.6A2 2 0 0010 10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><path d="M1 8s2-3.5 7-5M15 8s-2 3.5-7 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>';
+    } else {
+        input.type = 'password';
+        eye.innerHTML = '<path d="M1 8s2.5-5 7-5 7 5 7 5-2.5 5-7 5-7-5-7-5z" stroke="currentColor" stroke-width="1.3"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.3"/>';
+    }
+}
+</script>
 </body>
 </html>

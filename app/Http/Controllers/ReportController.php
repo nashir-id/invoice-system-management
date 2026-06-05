@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Invoice;
-use App\Models\Client;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -67,5 +67,47 @@ class ReportController extends Controller
             'totalInvoices', 'totalRevenue', 'totalUnpaid', 'totalOverdue',
             'chartData', 'topClients', 'recentInvoices', 'years'
         ));
+    }
+
+    public function exportExcel(Request $request)
+    {
+        [$startDate, $endDate] = $this->weeklyReportRange(
+            $request->filled('date') ? Carbon::parse($request->input('date')) : null
+        );
+
+        $invoices = Invoice::with(['client:id,company_name', 'payment'])
+            ->paid()
+            ->whereBetween('invoice_date', [$startDate->toDateString(), $endDate->toDateString()])
+            ->orderBy('invoice_date')
+            ->orderBy('invoice_number')
+            ->get();
+
+        $summary = [
+            'subtotal' => $invoices->sum(fn($invoice) => (float) $invoice->subtotal),
+            'discount' => $invoices->sum(fn($invoice) => (float) $invoice->discount),
+            'ppn' => $invoices->sum(fn($invoice) => (float) $invoice->ppn_amount),
+            'total' => $invoices->sum(fn($invoice) => (float) $invoice->total),
+        ];
+
+        $filename = 'laporan-keuangan-' .
+            $startDate->format('Ymd') . '-' .
+            $endDate->format('Ymd') . '.xls';
+
+        return response()
+            ->view('reports.excel', compact('startDate', 'endDate', 'invoices', 'summary'))
+            ->header('Content-Type', 'application/vnd.ms-excel; charset=UTF-8')
+            ->header('Content-Disposition', "attachment; filename=\"{$filename}\"");
+    }
+
+    private function weeklyReportRange(?Carbon $date = null): array
+    {
+        $date = ($date ?? now())->copy();
+        $startDay = intdiv($date->day - 1, 7) * 7 + 1;
+        $endDay = min($startDay + 6, $date->copy()->endOfMonth()->day);
+
+        return [
+            $date->copy()->day($startDay)->startOfDay(),
+            $date->copy()->day($endDay)->endOfDay(),
+        ];
     }
 }

@@ -40,8 +40,7 @@
             @if($client->phone)
             <div>
                 <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">WhatsApp</div>
-                <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $client->phone) }}"
-                   target="_blank"
+                <a target="_blank"
                    style="color:#16a34a;text-decoration:none;font-size:13px">
                     {{ $client->phone }}
                 </a>
@@ -51,8 +50,7 @@
             @if($client->email)
             <div>
                 <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">Email</div>
-                <a href="mailto:{{ $client->email }}"
-                   style="color:#4f46e5;text-decoration:none;font-size:13px">
+                <a style="color:#4f46e5;text-decoration:none;font-size:13px">
                     {{ $client->email }}
                 </a>
             </div>
@@ -61,8 +59,7 @@
             @if($client->website)
             <div>
                 <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">Website</div>
-                <a href="https://{{ $client->website }}" target="_blank"
-                   style="color:#4f46e5;text-decoration:none;font-size:13px">
+                <a style="color:#4f46e5;text-decoration:none;font-size:13px">
                     {{ $client->website }}
                 </a>
             </div>

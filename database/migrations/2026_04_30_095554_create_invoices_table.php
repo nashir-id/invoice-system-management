@@ -14,7 +14,7 @@ return new class extends Migration
             $table->unsignedBigInteger('created_by')->nullable();
             $table->unsignedBigInteger('voucher_id')->nullable();
             $table->string('invoice_number')->unique();
-            $table->enum('type', ['proforma', 'commercial', 'recurring']);
+            $table->enum('type', ['one_time', 'recurring']);
             $table->date('invoice_date');
             $table->date('due_date')->nullable();
             $table->boolean('use_ppn')->default(false);

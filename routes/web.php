@@ -13,7 +13,7 @@ use App\Http\Controllers\SettingController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::get('/', fn() => redirect()->route('login'));
+Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('invoice/public/{token}', [InvoiceController::class, 'publicView'])
     ->name('invoice.public');
 
@@ -55,9 +55,11 @@ Route::middleware(['auth'])->group(function () {
             ->name('invoices.pay');
 
         // Voucher
-        Route::resource('vouchers', VoucherController::class);          
+        Route::get('vouchers/check', [VoucherController::class, 'check'])
+            ->name('vouchers.check');
         Route::post('vouchers/validate-code', [VoucherController::class, 'validateCode'])
             ->name('vouchers.validate');
+        Route::resource('vouchers', VoucherController::class);
 
         // Recurring Template 
         Route::resource('recurring-templates', RecurringTemplateController::class); 

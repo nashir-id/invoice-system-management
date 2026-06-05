@@ -179,11 +179,11 @@
                     <td>
                         <div style="display:flex;gap:6px">
                             <a href="{{ route('invoices.show', $inv) }}" class="btn btn-outline btn-sm">Detail</a>
-                            @adminup
+                           
                             @if($inv->status !== 'paid')
                                 <a href="{{ route('invoices.edit', $inv) }}" class="btn btn-outline btn-sm">Edit</a>
                             @endif
-                            @endadminup
+                            
                         </div>
                     </td>
                 </tr>

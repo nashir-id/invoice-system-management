@@ -74,10 +74,10 @@ class Invoice extends Model
 
     // ── Relasi belum siap (uncomment jika modelnya sudah dibuat) ──
 
-    // public function payment(): HasOne
-    // {
-    //     return $this->hasOne(Payment::class);
-    // }
+    public function payment(): HasOne
+    {
+        return $this->hasOne(Payment::class);
+    }
 
     // public function notifications(): HasMany
     // {

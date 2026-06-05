@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile_photo_path',
     ];
 
     /**
@@ -45,5 +46,22 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function getProfilePhotoUrlAttribute(): ?string
+    {
+        if (! $this->profile_photo_path) {
+            return null;
+        }
+
+        $path = 'storage/' . ltrim($this->profile_photo_path, '/');
+
+        if (app()->runningInConsole()) {
+            return asset($path);
+        }
+
+        return request()->getSchemeAndHttpHost()
+            . request()->getBaseUrl()
+            . '/' . $path;
     }
 }

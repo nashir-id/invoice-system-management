@@ -11,12 +11,13 @@ class VoucherController extends Controller
      * Daftar semua voucher
      */
     public function index()
-{
-    // Hapus withCount dulu karena kolom voucher_id belum ada di tabel invoices
-    $vouchers = Voucher::latest()->paginate(15);
+    {
+        $vouchers = Voucher::withCount('invoices')
+            ->latest()
+            ->paginate(15);
 
-    return view('vouchers.index', compact('vouchers'));
-}
+        return view('vouchers.index', compact('vouchers'));
+    }
 
     /**
      * Form tambah voucher baru

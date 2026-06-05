@@ -11,6 +11,21 @@ class StoreInvoiceRequest extends FormRequest
     return auth()->check();
 }
 
+    protected function prepareForValidation(): void
+    {
+        if (! $this->filled('type')) {
+            return;
+        }
+
+        $type = strtolower(str_replace([' ', '-'], '_', $this->input('type')));
+
+        if ($type === 'onetime') {
+            $type = 'one_time';
+        }
+
+        $this->merge(['type' => $type]);
+    }
+
     public function rules(): array
     {
         return [
