@@ -98,6 +98,17 @@
                     @enderror
                 </div>
 
+                <div class="field">
+                    <label>Kode Login Klien <span style="color:#dc2626">(wajib diisi)</span></label>
+                    <input type="text" name="client_login_code"
+                           value="{{ old('client_login_code', $client->client_login_code) }}"
+                           placeholder="Contoh: CLI-ABC12345"
+                           class="{{ $errors->has('client_login_code') ? 'is-error' : '' }}">
+                    @error('client_login_code')
+                        <span class="field-error">{{ $message }}</span>
+                    @enderror
+                </div>
+
             </div>
         </div>
     </div>

@@ -127,5 +127,10 @@
     </div>
     @endif
 </div>
+<footer style="margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; text-align: center;">
+    <div style="color: #64748b; font-size: 14px;">
+        <p>Nashir.id © 2026. All rights reserved.</p>
+    </div>
+</footer>
 
 @endsection

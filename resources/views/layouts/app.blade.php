@@ -9,6 +9,8 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Poppins', sans-serif; background: #f1f4f8; min-height: 100vh; display: flex; }
+        .nav-toggle { position: fixed; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+        .sidebar-backdrop { display: none; }
 
         /* ── Sidebar ── */
         .sidebar {
@@ -57,7 +59,7 @@
         .sb-logout:hover { color: rgba(255,255,255,0.65); }
 
         /* ── Main ── */
-        .main { flex: 1; display: flex; flex-direction: column; min-height: 100vh; overflow: hidden; }
+        .main { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 100vh; overflow: hidden; }
 
         .topbar {
             background: #fff; border-bottom: 1px solid #e8edf3;
@@ -66,12 +68,18 @@
             position: sticky; top: 0; z-index: 10;
         }
         .topbar-left { display: flex; align-items: center; gap: 8px; }
+        .mobile-menu-btn {
+            display: none; align-items: center; justify-content: center;
+            width: 38px; height: 38px; border: 1px solid #e2e8f0;
+            border-radius: 8px; background: #fff; color: #1e1b4b; cursor: pointer;
+        }
+        .mobile-menu-btn svg { width: 18px; height: 18px; }
         .page-title  { font-size: 15px; font-weight: 600; color: #1a1a2e; }
         .breadcrumb  { font-size: 12px; color: #94a3b8; }
         .breadcrumb a { color: #64748b; text-decoration: none; }
         .breadcrumb a:hover { color: #1a1a2e; }
 
-        .topbar-right { display: flex; align-items: center; gap: 10px; }
+        .topbar-right { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
         .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 8px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; text-decoration: none; transition: all .12s; font-family: inherit; }
         .btn-primary { background: #1e1b4b; color: #fff; }
         .btn-primary:hover { background: #312e81; }
@@ -85,7 +93,7 @@
         .btn svg { width: 14px; height: 14px; }
 
         /* ── Content area ── */
-        .content { flex: 1; padding: 24px; overflow-y: auto; }
+        .content { flex: 1; width: 100%; max-width: 100%; padding: 24px; overflow-y: auto; }
 
         /* ── Alert / flash ── */
         .flash { padding: 10px 16px; border-radius: 8px; font-size: 13px; margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
@@ -100,7 +108,8 @@
         .card-body   { padding: 20px; }
 
         /* ── Table ── */
-        .table-wrap { overflow-x: auto; }
+        .table-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-wrap table { min-width: 760px; }
         table { width: 100%; border-collapse: collapse; }
         thead th { font-size: 11px; font-weight: 600; color: #94a3b8; text-transform: uppercase; letter-spacing: .06em; padding: 10px 16px; text-align: left; border-bottom: 1px solid #f1f5f9; white-space: nowrap; }
         tbody td { font-size: 13px; color: #334155; padding: 11px 16px; border-bottom: 1px solid #f8fafc; }
@@ -179,15 +188,66 @@
         .toggle input:checked + .toggle-slider::before { transform: translateX(16px); }
 
         /* ── Responsive ── */
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
+        @media (max-width: 1180px) {
             .stats-grid { grid-template-columns: 1fr 1fr; }
+            .content { padding: 18px; }
+            .card-header { gap: 12px; flex-wrap: wrap; }
+            .card-body form[method="GET"] .field { flex: 1 1 180px !important; width: auto !important; }
+        }
+        @media (max-width: 900px) {
+            body { display: block; }
+            .mobile-menu-btn { display: inline-flex; flex-shrink: 0; }
+            .sidebar {
+                position: fixed; inset: 0 auto 0 0; z-index: 40;
+                width: min(82vw, 280px); min-width: 0; height: 100dvh;
+                transform: translateX(-100%); transition: transform .18s ease;
+                box-shadow: 18px 0 40px rgba(15, 23, 42, .22);
+            }
+            .nav-toggle:checked ~ .sidebar { transform: translateX(0); }
+            .nav-toggle:checked ~ .sidebar-backdrop {
+                display: block; position: fixed; inset: 0; z-index: 30;
+                background: rgba(15, 23, 42, .38);
+            }
+            .main { min-height: 100dvh; }
+            .topbar { padding: 0 16px; min-height: 58px; height: auto; gap: 12px; }
+            .topbar-left { min-width: 0; flex: 1; }
+            .page-title { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .breadcrumb { display: none; }
+            .topbar-right { gap: 8px; }
+            .topbar-right .btn { padding: 7px 10px; }
+        }
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: 1fr; }
             .form-grid, .form-grid-3 { grid-template-columns: 1fr; }
+            .content { padding: 14px; }
+            .card-header, .card-body { padding: 14px; }
+            .flash { align-items: flex-start; }
+            .pagination { flex-wrap: wrap; }
+            .page-info { width: 100%; margin-left: 0; margin-top: 8px; }
+            .card-body form[method="GET"] { display: grid !important; grid-template-columns: 1fr; }
+            .card-body form[method="GET"] .field,
+            .card-body form[method="GET"] .btn,
+            .card-body form[method="GET"] a.btn,
+            .card-body form[method="GET"] button.btn { width: 100% !important; }
+            .btn { justify-content: center; }
+        }
+        @media (max-width: 520px) {
+            .topbar { align-items: flex-start; padding: 12px 14px; flex-direction: column; }
+            .topbar-left, .topbar-right { width: 100%; }
+            .topbar-right .btn { width: 100%; }
+            .stats-grid { gap: 10px; margin-bottom: 14px; }
+            .stat-card { padding: 14px; }
+            .stat-value { font-size: 20px; overflow-wrap: anywhere; }
+            .table-wrap table { min-width: 680px; }
+            .empty-state { padding: 34px 16px; }
         }
     </style>
     @stack('styles')
 </head>
 <body>
+
+<input type="checkbox" id="nav-toggle" class="nav-toggle" aria-hidden="true">
+<label for="nav-toggle" class="sidebar-backdrop" aria-label="Tutup menu"></label>
 
 {{-- ── Sidebar ── --}}
 <div class="sidebar">
@@ -377,12 +437,18 @@
     {{-- Topbar --}}
     <div class="topbar">
         <div class="topbar-left">
+            <label for="nav-toggle" class="mobile-menu-btn" aria-label="Buka menu">
+                <svg viewBox="0 0 16 16" fill="none">
+                    <path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                </svg>
+            </label>
             <span class="page-title">@yield('page-title', 'Dashboard')</span>
             @hasSection('breadcrumb')
                 <span class="breadcrumb"> / @yield('breadcrumb')</span>
             @endif
         </div>
         <div class="topbar-right">
+
 
         </div>
     </div>

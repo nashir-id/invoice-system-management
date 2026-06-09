@@ -46,10 +46,10 @@ class ClientController extends Controller
      */
     public function store(StoreClientRequest $request)
 {
-    $client = Client::create(array_merge(
-        $request->validated(),
-        ['is_active' => true]
-    ));
+    $data = $request->validated();
+    $data['client_login_code'] = strtoupper($data['client_login_code']);
+
+    $client = Client::create(array_merge($data, ['is_active' => true]));
 
     // redirect ke INDEX agar tombol Tambah Klien tetap terlihat
     return redirect()->route('clients.index')
@@ -89,7 +89,10 @@ class ClientController extends Controller
      */
     public function update(StoreClientRequest $request, Client $client)
     {
-        $client->update($request->validated());
+        $data = $request->validated();
+        $data['client_login_code'] = strtoupper($data['client_login_code']);
+
+        $client->update($data);
 
         return redirect()->route('clients.show', $client)
             ->with('success', "Data {$client->company_name} berhasil diperbarui.");
@@ -136,4 +139,5 @@ class ClientController extends Controller
             'email'        => $client->email,
         ]);
     }
+
 }

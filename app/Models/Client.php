@@ -16,6 +16,7 @@ class Client extends Model
     'address',
     'notes',
     'is_active',
+    'client_login_code',
 ];
 
     
