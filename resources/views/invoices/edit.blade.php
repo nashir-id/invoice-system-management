@@ -37,7 +37,7 @@
     .voucher-badge { font-size: .75rem; margin-top: 4px; display: flex; align-items: center; gap: 4px; }
     .voucher-ok { color: #16a34a; }
     .voucher-err { color: #ef4444; }
-    .items-wrap { overflow-x: auto; }
+    .items-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .items-table { width: 100%; border-collapse: collapse; min-width: 580px; }
     .items-table thead th { font-size: .68rem; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; color: #9ca3af; padding: 8px; background: #fafbff; border-bottom: 1px solid #f0f2f8; white-space: nowrap; text-align: left; }
     .items-table td { padding: 5px; vertical-align: middle; border-bottom: 1px solid #f7f8fc; }
@@ -65,8 +65,18 @@
     .btn-submit { width: 100%; padding: 10px; border-radius: 9px; background: #5B5BD6; color: #fff; border: none; font-size: .9rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 8px; }
     .btn-cancel { width: 100%; padding: 9px; border-radius: 9px; background: transparent; color: #6b7280; border: 1px solid #e5e7eb; font-size: .85rem; font-weight: 500; text-align: center; text-decoration: none; display: block; }
     .summary-note { font-size: .7rem; color: #9ca3af; text-align: center; margin-top: 8px; }
-    @media (max-width: 991px) { .inv-layout { grid-template-columns: 1fr !important; } .summary-card { position: static; } }
-    @media (max-width: 576px) { .inv-page { padding: 1rem; } .inv-grid { grid-template-columns: 1fr; } .inv-header { flex-direction: column; } }
+    @media (max-width: 991px) { .inv-page { padding: 1.25rem 0; } .inv-layout { grid-template-columns: 1fr !important; } .summary-card { position: static; } }
+    @media (max-width: 768px) {
+        .inv-card-head { align-items: flex-start; gap: 10px; flex-direction: column; }
+        .inv-grid { grid-template-columns: 1fr; }
+        .voucher-row { flex-direction: column; gap: 8px; }
+        .voucher-row .inv-input,
+        .btn-check { width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .summary-body { padding: .9rem; }
+        .sum-total { align-items: flex-start; flex-direction: column; gap: 4px; }
+        .sum-total-val { font-size: 1.2rem; overflow-wrap: anywhere; }
+    }
+    @media (max-width: 576px) { .inv-page { padding: .75rem 0; } .inv-header { flex-direction: column; } .btn-back { width: 100%; justify-content: center; } .items-table { min-width: 640px; } }
 </style>
 @endpush
 

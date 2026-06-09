@@ -223,21 +223,65 @@
                 padding-top: 14px;
             }
             .preview { min-height: auto; padding-bottom: 32px; }
+            .hero-illustration { width: min(100%, 620px); margin: 0 auto; }
             .features { grid-template-columns: repeat(2, 1fr); margin-top: 0; }
         }
         @media (max-width: 640px) {
-            .nav { align-items: flex-start; }
-            .nav-actions { flex-direction: column; align-items: stretch; }
-            .nav-actions .btn { min-height: 38px; padding: 0 12px; font-size: 12px; }
+            .page { overflow: visible; }
+            .nav {
+                position: relative;
+                z-index: 20;
+                width: min(calc(100% - 24px), 1120px);
+                align-items: center;
+                flex-direction: column;
+                gap: 14px;
+                padding: 16px 0 10px;
+            }
+            .brand { width: 100%; justify-content: center; }
+            .brand img { width: 40px; height: 40px; }
+            .brand span { font-size: 15px; }
+            .brand small { font-size: 9px; text-align: left; }
+            .nav-actions {
+                width: 100%;
+                display: grid !important;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 8px;
+                padding: 6px;
+                border: 1px solid rgba(226, 232, 240, .92);
+                border-radius: 12px;
+                background: rgba(255, 255, 255, .66);
+                box-shadow: 0 12px 28px rgba(15, 23, 42, .08);
+                position: relative;
+                z-index: 30;
+                opacity: 1;
+                visibility: visible;
+            }
+            .nav-actions .btn {
+                display: inline-flex !important;
+                min-height: 44px;
+                padding: 0 12px;
+                border-radius: 8px;
+                font-size: 13px;
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+            }
+            .nav-actions .btn-ghost { background: transparent; border-color: transparent; }
             h1 { font-size: 40px; }
             .lead { font-size: 15px; }
+            .hero { width: min(calc(100% - 24px), 1120px); margin-top: 4px; padding-bottom: 24px; }
+            .hero-actions .btn { width: 100%; }
             .quick-stats,
             .features { grid-template-columns: 1fr; }
             .hero-illustration {
                 width: 100%;
                 max-width: 620px;
+                margin-top: 0;
                 margin-right: 0;
             }
+        }
+        @media (max-width: 360px) {
+            .nav-actions { grid-template-columns: 1fr; }
         }
     </style>
 </head>
@@ -344,3 +388,8 @@
     </div>
 </body>
 </html>
+<footer style="margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; text-align: center;">
+    <div style="color: #64748b; font-size: 14px;">
+        <p>Nashir.id © 2026. All rights reserved.</p>
+    </div>
+</footer>

@@ -5,6 +5,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ClientController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ClientPortalController;
 use App\Http\Controllers\VoucherController;
 use App\Http\Controllers\RecurringTemplateController;
 use App\Http\Controllers\ReportController;
@@ -16,6 +17,15 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => view('welcome'))->name('home');
 Route::get('invoice/public/{token}', [InvoiceController::class, 'publicView'])
     ->name('invoice.public');
+
+Route::get('client/login', [ClientPortalController::class, 'showLogin'])
+    ->name('client-portal.login');
+Route::post('client/login', [ClientPortalController::class, 'login'])
+    ->name('client-portal.login.submit');
+Route::get('client/dashboard', [ClientPortalController::class, 'dashboard'])
+    ->name('client-portal.dashboard');
+Route::post('client/logout', [ClientPortalController::class, 'logout'])
+    ->name('client-portal.logout');
 
 
 Route::middleware(['auth'])->group(function () {

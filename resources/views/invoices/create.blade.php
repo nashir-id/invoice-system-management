@@ -7,6 +7,8 @@
     * { box-sizing: border-box; }
 
     .inv-page { background: var(--bs-body-bg, #f5f6fa); min-height: 100vh; padding: 2rem 1.5rem; }
+    .inv-page > .container-fluid { width: min(100%, 1400px); margin: 0 auto; padding: 0 12px; }
+    .inv-layout > * { min-width: 0; }
 
     /* ── Header ── */
     .inv-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 1.75rem; gap: 1rem; }
@@ -30,6 +32,7 @@
         border: 1px solid #e9ecf3;
         margin-bottom: 1rem;
         overflow: hidden;
+        max-width: 100%;
     }
     .inv-card-head {
         display: flex; align-items: center; justify-content: space-between;
@@ -95,7 +98,7 @@
     .voucher-err { color: #ef4444; }
 
     /* ── Items Table ── */
-    .items-wrap { overflow-x: auto; }
+    .items-wrap { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
     .items-table { width: 100%; border-collapse: collapse; min-width: 580px; }
     .items-table thead th {
         font-size: .68rem; font-weight: 600; text-transform: uppercase;
@@ -198,13 +201,70 @@
     .summary-note { font-size: .7rem; color: #9ca3af; text-align: center; margin-top: 8px; }
 
     @media (max-width: 991px) {
+        .inv-page { padding: 1.25rem 0; }
         .inv-layout { grid-template-columns: 1fr !important; }
         .summary-card { position: static; }
     }
-    @media (max-width: 576px) {
-        .inv-page { padding: 1rem; }
+    @media (max-width: 768px) {
+        .inv-page > .container-fluid { padding: 0 8px; }
+        .inv-card-head { align-items: flex-start; gap: 10px; flex-direction: column; }
+        .inv-card-head-left { min-width: 0; }
+        .btn-add-item { width: 100%; justify-content: center; }
         .inv-grid { grid-template-columns: 1fr; }
+        .voucher-row { flex-direction: column; gap: 8px; }
+        .voucher-row .inv-input,
+        .btn-check { width: 100%; border-radius: 8px; border: 1px solid #e5e7eb; }
+        .items-wrap { overflow: visible; }
+        .items-table,
+        .items-table thead,
+        .items-table tbody,
+        .items-table tr,
+        .items-table td { display: block; width: 100%; min-width: 0; }
+        .items-table thead { display: none; }
+        .items-table tbody tr {
+            padding: 12px;
+            border: 1px solid #eef2f7;
+            border-radius: 10px;
+            background: #fff;
+            margin-bottom: 10px;
+        }
+        .items-table td {
+            padding: 0;
+            border-bottom: 0;
+            text-align: left !important;
+        }
+        .items-table td + td { margin-top: 10px; }
+        .items-table td::before {
+            display: block;
+            margin-bottom: 5px;
+            font-size: .68rem;
+            font-weight: 600;
+            color: #6b7280;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+        }
+        .items-table td:nth-child(1)::before { content: "Nama layanan"; }
+        .items-table td:nth-child(2)::before { content: "Deskripsi"; }
+        .items-table td:nth-child(3)::before { content: "Harga"; }
+        .items-table td:nth-child(4)::before { content: "Qty"; }
+        .items-table td:nth-child(5)::before { content: "Subtotal"; }
+        .items-table td:nth-child(6)::before { content: "Aksi"; }
+        .subtotal-cell {
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 10px 12px;
+            text-align: left;
+        }
+        .btn-remove { width: 100%; }
+        .summary-body { padding: .9rem; }
+        .sum-total { align-items: flex-start; flex-direction: column; gap: 4px; }
+        .sum-total-val { font-size: 1.2rem; overflow-wrap: anywhere; }
+    }
+    @media (max-width: 576px) {
+        .inv-page { padding: .75rem 0; }
         .inv-header { flex-direction: column; }
+        .btn-back { width: 100%; justify-content: center; }
+        .inv-page > .container-fluid { padding: 0; }
     }
 </style>
 @endpush

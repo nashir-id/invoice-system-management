@@ -80,6 +80,14 @@
             @endif
 
             <div style="border-top:1px solid #f1f5f9;padding-top:12px">
+                <div style="font-size:11px;color:#94a3b8;margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em">Kode Login Klien</div>
+                <div style="font-family:monospace;font-size:14px;font-weight:700;color:#171246">{{ $client->client_login_code ?: '-' }}</div>
+                <a style="display:inline-block;margin-top:6px;color:#4f46e5;text-decoration:none;font-size:12px">
+                    Buka portal klien
+                </a>
+            </div>
+
+            <div style="border-top:1px solid #f1f5f9;padding-top:12px">
                 <span class="badge {{ $client->is_active ? 'badge-active' : 'badge-inactive' }}">
                     {{ $client->is_active ? 'Aktif' : 'Nonaktif' }}
                 </span>

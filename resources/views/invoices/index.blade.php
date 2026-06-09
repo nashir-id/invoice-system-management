@@ -2,17 +2,13 @@
 @section('title', 'Invoice')
 @section('page-title', 'Invoice')
 
-@section('topbar-actions')
-    @adminup
-    <a href="{{ route('invoices.create') }}" class="btn btn-primary">
-        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
-        Buat Invoice
-    </a>
-    @endadminup
-@endsection
-
 @push('styles')
 <style>
+    .invoice-page-head {
+        display: flex; align-items: center; justify-content: space-between;
+        gap: 12px; margin-bottom: 16px;
+    }
+    .invoice-page-subtitle { font-size: 13px; color: #64748b; }
     .status-tabs { display: flex; gap: 0; margin-bottom: 16px; border-bottom: 2px solid #f1f5f9; }
     .status-tab {
         padding: 8px 16px; font-size: 13px; font-weight: 500; color: #94a3b8;
@@ -30,10 +26,29 @@
     .sort-btn:hover { color: #475569; }
     .sort-btn.asc::after  { content: ' ↑'; }
     .sort-btn.desc::after { content: ' ↓'; }
+    @media (max-width: 768px) {
+        .invoice-page-head { align-items: stretch; flex-direction: column; }
+        .invoice-page-head .btn { width: 100%; }
+        .status-tabs {
+            overflow-x: auto; -webkit-overflow-scrolling: touch;
+            padding-bottom: 2px; border-bottom-width: 1px;
+        }
+        .status-tab { flex: 0 0 auto; padding: 9px 12px; }
+    }
 </style>
 @endpush
 
 @section('content')
+
+<div class="invoice-page-head">
+    <div class="invoice-page-subtitle">
+        Kelola invoice, status pembayaran, dan data tagihan klien.
+    </div>
+    <a href="{{ route('invoices.create') }}" class="btn btn-primary">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Buat Invoice
+    </a>
+</div>
 
 {{-- Status tabs --}}
 <div class="status-tabs">
@@ -203,5 +218,10 @@
     </div>
     @endif
 </div>
+<footer style="margin-top: 40px; padding: 20px 0; border-top: 1px solid #e2e8f0; text-align: center;">
+    <div style="color: #64748b; font-size: 14px;">
+        <p>Nashir.id © 2026. All rights reserved.</p>
+    </div>
+</footer>
 
 @endsection
