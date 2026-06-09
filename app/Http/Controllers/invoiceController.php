@@ -10,6 +10,7 @@ use App\Models\InvoiceLog;
 use App\Http\Requests\StoreInvoiceRequest;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Models\Setting;
 
 class InvoiceController extends Controller
 {
@@ -117,10 +118,23 @@ class InvoiceController extends Controller
     }
 
     public function show(Invoice $invoice)
-    {
-        $invoice->load(['client', 'items', 'voucher', 'creator', 'payment', 'logs.user']);
-        return view('invoices.show', compact('invoice'));
-    }
+{
+    $invoice->load([
+        'client',
+        'items',
+        'voucher',
+        'creator',
+        'payment',
+        'logs.user'
+    ]);
+
+    $setting = Setting::first();
+
+    return view('invoices.show', compact(
+        'invoice',
+        'setting'
+    ));
+}
 
     public function download(Invoice $invoice)
     {
@@ -145,6 +159,46 @@ class InvoiceController extends Controller
 
         return view('invoices.edit', compact('invoice', 'clients', 'defaultTnC'));
     }
+
+public function paymentPage(
+    Invoice $invoice,
+    string $bank
+)
+{
+    $setting = Setting::first();
+
+    $bankData = match ($bank) {
+
+        'mandiri' => [
+            'name'   => $setting->mandiri_name,
+            'number' => $setting->mandiri_number,
+            'holder' => $setting->mandiri_holder,
+        ],
+
+        'bca' => [
+            'name'   => $setting->bca_name,
+            'number' => $setting->bca_number,
+            'holder' => $setting->bca_holder,
+        ],
+
+        'seabank' => [
+            'name'   => $setting->seabank_name,
+            'number' => $setting->seabank_number,
+            'holder' => $setting->seabank_holder,
+        ],
+
+        default => abort(404)
+    };
+
+    return view(
+        'invoices.payment-page',
+        compact(
+            'invoice',
+            'bankData',
+            'bank'
+        )
+    );
+}
 
     public function update(StoreInvoiceRequest $request, Invoice $invoice)
     {

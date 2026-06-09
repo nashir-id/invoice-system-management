@@ -22,6 +22,12 @@ class RoleMiddleware
 
         $user = auth()->user();
 
+       //cek mencegahh user nonaktif login//
+        if (!$user->is_active) {
+            auth()->logout();
+            abort(403, 'Akun Anda telah dinonaktifkan.');
+}
+
         // Cek apakah role user sesuai
         if (!in_array($user->role, $roles)) {
             abort(403, 'Akses ditolak');

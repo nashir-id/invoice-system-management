@@ -211,7 +211,7 @@
         </a>
 
 
-        
+
         <a href="{{ route('clients.index') }}" class="sb-item {{ request()->routeIs('clients.*') ? 'active' : '' }}">
             <svg viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/>
@@ -249,7 +249,7 @@
             </svg>
             Laporan
         </a>
-        
+
         <div class="sb-group-label" style="margin-top:8px">Pengaturan</div>
         <a href="{{ route('profile.edit') }}" class="sb-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
     <svg viewBox="0 0 16 16" fill="none">
@@ -262,14 +262,88 @@
     </svg>
     Profile
 </a>
-        <a href="{{ route('settings.index') }}" class="sb-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+
+        {{-- <a href="{{ route('settings.index') }}" class="sb-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
             <svg viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/>
                 <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.1 3.1l1.4 1.4M11.5 11.5l1.4 1.4M3.1 12.9l1.4-1.4M11.5 4.5l1.4-1.4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
             </svg>
-            Pengaturan
-        </a>
-       
+        </a> --}}
+
+        {{-- PENGATURAN SISTEM (OWNER ONLY) --}}
+@if(auth()->user()->role === 'owner')
+
+<a href="{{ route('settings.index') }}"
+   class="sb-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
+
+    <svg viewBox="0 0 24 24"
+         width="18"
+         height="18"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2">
+         <path d="M12 2L14.09 8.26L20 10L14.09 11.74L12 18L9.91 11.74L4 10L9.91 8.26L12 2Z"/>
+
+    </svg>
+
+    <span>Pengaturan Sistem</span>
+
+    
+    {{-- <li>
+    <a href="{{ route('payments.verifications') }}">
+        Verifikasi Pembayaran
+    </a>
+</li> --}}
+</a>
+
+@endif
+
+@if(auth()->user()->role === 'owner')
+
+<a href="{{ route('payments.verifications') }}">
+   class="sb-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+
+    <svg viewBox="0 0 24 24"
+         width="18"
+         height="18"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2">
+
+        <path d="M17 21V19A4 4 0 0 0 13 15H5A4 4 0 0 0 1 19V21"/>
+        <circle cx="9" cy="7" r="4"/>
+
+    </svg>
+
+    <span>Verifikasi Pembayaran</span>
+    </a>
+
+@endif
+
+@if(auth()->user()->role === 'owner')
+
+<a href="{{ route('users.index') }}"
+   class="sb-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+
+    <svg viewBox="0 0 24 24"
+         width="18"
+         height="18"
+         fill="none"
+         stroke="currentColor"
+         stroke-width="2">
+
+        <path d="M17 21V19A4 4 0 0 0 13 15H5A4 4 0 0 0 1 19V21"/>
+        <circle cx="9" cy="7" r="4"/>
+
+    </svg>
+
+    <span>Manajemen User</span>
+    </a>
+
+@endif
+
+
+
     </nav>
 
     <div class="sb-footer">
@@ -309,7 +383,7 @@
             @endif
         </div>
         <div class="topbar-right">
-            
+
         </div>
     </div>
 
