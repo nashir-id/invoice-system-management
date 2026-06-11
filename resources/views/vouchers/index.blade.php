@@ -98,7 +98,7 @@
                         @endif
                     </td>
                     <td>
-                        <div style="display:flex;gap:6px">
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
                             <a href="{{ route('vouchers.edit', $voucher) }}"
                                class="btn btn-outline btn-sm">Edit</a>
 
@@ -111,6 +111,13 @@
                                     class="btn btn-sm {{ $voucher->is_active ? 'btn-danger' : 'btn-success' }}">
                                     {{ $voucher->is_active ? 'Nonaktifkan' : 'Aktifkan' }}
                                 </button>
+                            </form>
+                            <form method="POST"
+                                  action="{{ route('vouchers.force-delete', $voucher) }}"
+                                  onsubmit="return confirm('Hapus permanen voucher {{ addslashes($voucher->code) }}?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
                             </form>
                         </div>
                     </td>

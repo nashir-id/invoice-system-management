@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Client;
 use App\Http\Requests\StoreClientRequest;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ClientController extends Controller
 {
@@ -114,6 +115,21 @@ class ClientController extends Controller
 
         return redirect()->route('clients.index')
             ->with('success', "Klien {$client->company_name} berhasil dinonaktifkan.");
+    }
+
+    /**
+     * Hapus permanen klien beserta data terkait.
+     */
+    public function forceDelete(Client $client)
+    {
+        $name = $client->company_name;
+
+        DB::transaction(function () use ($client) {
+            $client->delete();
+        });
+
+        return redirect()->route('clients.index')
+            ->with('success', "Klien {$name} berhasil dihapus.");
     }
 
     /**

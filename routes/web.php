@@ -34,7 +34,7 @@ Route::get('invoice/public/{token}', [
 | Authenticated Route
 |--------------------------------------------------------------------------
 */
-=======
+
 Route::get('client/login', [ClientPortalController::class, 'showLogin'])
     ->name('client-portal.login');
 Route::post('client/login', [ClientPortalController::class, 'login'])
@@ -96,6 +96,11 @@ Route::middleware(['auth'])->group(function () {
         */
 
         Route::resource('clients', ClientController::class);
+
+        Route::delete(
+            'clients/{client}/force-delete',
+            [ClientController::class, 'forceDelete']
+        )->name('clients.force-delete');
 
         Route::patch(
             'clients/{client}/activate',
@@ -201,6 +206,11 @@ Route::middleware(['role:owner,admin'])->group(function () {
             'vouchers/validate-code',
             [VoucherController::class, 'validateCode']
         )->name('vouchers.validate');
+
+        Route::delete(
+            'vouchers/{voucher}/force-delete',
+            [VoucherController::class, 'forceDelete']
+        )->name('vouchers.force-delete');
 
         Route::resource('vouchers', VoucherController::class);
 

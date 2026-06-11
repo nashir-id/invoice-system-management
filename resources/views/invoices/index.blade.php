@@ -192,11 +192,18 @@
                         </span>
                     </td>
                     <td>
-                        <div style="display:flex;gap:6px">
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
                             <a href="{{ route('invoices.show', $inv) }}" class="btn btn-outline btn-sm">Detail</a>
                            
                             @if($inv->status !== 'paid')
                                 <a href="{{ route('invoices.edit', $inv) }}" class="btn btn-outline btn-sm">Edit</a>
+                                <form method="POST"
+                                      action="{{ route('invoices.destroy', $inv) }}"
+                                      onsubmit="return confirm('Hapus invoice {{ addslashes($inv->invoice_number) }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
                             @endif
                             
                         </div>

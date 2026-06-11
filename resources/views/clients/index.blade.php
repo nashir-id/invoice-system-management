@@ -138,6 +138,15 @@
                                     </button>
                                 </form>
                             @endif
+                            <form method="POST"
+                                  action="{{ route('clients.force-delete', $client) }}"
+                                  onsubmit="return confirm('Hapus permanen klien {{ addslashes($client->company_name) }} beserta semua invoice terkait?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">
+                                    Hapus
+                                </button>
+                            </form>
                         </div>
                     </td>
                 </tr>
