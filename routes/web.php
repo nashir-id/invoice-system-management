@@ -34,7 +34,7 @@ Route::get('invoice/public/{token}', [
 | Authenticated Route
 |--------------------------------------------------------------------------
 */
-=======
+
 Route::get('client/login', [ClientPortalController::class, 'showLogin'])
     ->name('client-portal.login');
 Route::post('client/login', [ClientPortalController::class, 'login'])
