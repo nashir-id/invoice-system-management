@@ -45,7 +45,7 @@ Route::post('client/logout', [ClientPortalController::class, 'logout'])
     ->name('client-portal.logout');
 
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'active'])->group(function () {
 
     /*
     |--------------------------------------------------------------------------
@@ -85,6 +85,16 @@ Route::middleware(['auth'])->group(function () {
     |--------------------------------------------------------------------------
     */
 
+    Route::middleware(['role:owner,admin,staff'])->group(function () {
+        Route::get('invoices', [InvoiceController::class, 'index'])
+            ->name('invoices.index');
+
+        Route::get(
+            'invoices/{invoice}/download',
+            [InvoiceController::class, 'download']
+        )->name('invoices.download');
+    });
+
     Route::middleware(['role:owner,admin'])->group(function () {
 
     
@@ -118,12 +128,20 @@ Route::middleware(['auth'])->group(function () {
         |--------------------------------------------------------------------------
         */
 
-        Route::resource('invoices', InvoiceController::class);
+        Route::get('invoices/create', [InvoiceController::class, 'create'])
+            ->name('invoices.create');
 
-        Route::get(
-            'invoices/{invoice}/download',
-            [InvoiceController::class, 'download']
-        )->name('invoices.download');
+        Route::post('invoices', [InvoiceController::class, 'store'])
+            ->name('invoices.store');
+
+        Route::get('invoices/{invoice}/edit', [InvoiceController::class, 'edit'])
+            ->name('invoices.edit');
+
+        Route::match(['put', 'patch'], 'invoices/{invoice}', [InvoiceController::class, 'update'])
+            ->name('invoices.update');
+
+        Route::delete('invoices/{invoice}', [InvoiceController::class, 'destroy'])
+            ->name('invoices.destroy');
 
         Route::post(
             'invoices/{invoice}/send-email',
@@ -172,14 +190,6 @@ Route::middleware(['auth'])->group(function () {
 [PaymentController::class, 'reject']
 )->name('payments.reject');
 
-Route::delete(
-'invoices/{invoice}/pay',
-[PaymentController::class, 'destroy']
-)->name('invoices.pay.cancel');
-
-
-Route::middleware(['role:owner,admin'])->group(function () {
-
     Route::get(
         '/payments/verifications',
         [PaymentController::class,'verificationIndex']
@@ -189,8 +199,6 @@ Route::middleware(['role:owner,admin'])->group(function () {
         '/payments/{payment}',
         [PaymentController::class,'show']
     )->name('payments.show');
-
-});
         /*
         |--------------------------------------------------------------------------
         | Voucher
@@ -255,6 +263,11 @@ Route::middleware(['role:owner,admin'])->group(function () {
             '/reports/export-csv',
             [ReportController::class, 'exportCsv']
         )->name('reports.export-csv');
+    });
+
+    Route::middleware(['role:owner,admin,staff'])->group(function () {
+        Route::get('invoices/{invoice}', [InvoiceController::class, 'show'])
+            ->name('invoices.show');
     });
 
     /*
