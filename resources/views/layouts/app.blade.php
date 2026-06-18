@@ -272,6 +272,7 @@
 
 
 
+        @adminup
         <a href="{{ route('clients.index') }}" class="sb-item {{ request()->routeIs('clients.*') ? 'active' : '' }}">
             <svg viewBox="0 0 16 16" fill="none">
                 <circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.3"/>
@@ -279,6 +280,7 @@
             </svg>
             Klien
         </a>
+        @endadminup
 
         <a href="{{ route('invoices.index') }}" class="sb-item {{ request()->routeIs('invoices.*') ? 'active' : '' }}">
             <svg viewBox="0 0 16 16" fill="none">
@@ -287,6 +289,8 @@
             </svg>
             Invoice
         </a>
+
+        @adminup
         <a href="{{ route('recurring-templates.index') }}" class="sb-item {{ request()->routeIs('recurring-templates.*') ? 'active' : '' }}">
             <svg viewBox="0 0 16 16" fill="none">
                 <path d="M2 8a6 6 0 0 1 10.3-4.2M14 8a6 6 0 0 1-10.3 4.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
@@ -309,6 +313,7 @@
             </svg>
             Laporan
         </a>
+        @endadminup
 
         <div class="sb-group-label" style="margin-top:8px">Pengaturan</div>
         <a href="{{ route('profile.edit') }}" class="sb-item {{ request()->routeIs('profile.*') ? 'active' : '' }}">
@@ -331,7 +336,7 @@
         </a> --}}
 
         {{-- PENGATURAN SISTEM (OWNER ONLY) --}}
-@if(auth()->user()->role === 'owner')
+@owner
 
 <a href="{{ route('settings.index') }}"
    class="sb-item {{ request()->routeIs('settings.*') ? 'active' : '' }}">
@@ -356,12 +361,12 @@
 </li> --}}
 </a>
 
-@endif
+@endowner
 
-@if(auth()->user()->role === 'owner')
+@adminup
 
-<a href="{{ route('payments.verifications') }}">
-   class="sb-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
+<a href="{{ route('payments.verifications') }}"
+   class="sb-item {{ request()->routeIs('payments.*') ? 'active' : '' }}">
 
     <svg viewBox="0 0 24 24"
          width="18"
@@ -378,9 +383,9 @@
     <span>Verifikasi Pembayaran</span>
     </a>
 
-@endif
+@endadminup
 
-@if(auth()->user()->role === 'owner')
+@owner
 
 <a href="{{ route('users.index') }}"
    class="sb-item {{ request()->routeIs('users.*') ? 'active' : '' }}">
@@ -400,7 +405,7 @@
     <span>Manajemen User</span>
     </a>
 
-@endif
+@endowner
 
 
 
@@ -448,7 +453,7 @@
             @endif
         </div>
         <div class="topbar-right">
-
+            @yield('topbar-actions')
 
         </div>
     </div>

@@ -100,6 +100,17 @@ class VoucherController extends Controller
         return back()->with('success', "Voucher {$voucher->code} berhasil {$status}.");
     }
 
+    public function forceDelete(Voucher $voucher)
+    {
+        $code = $voucher->code;
+
+        $voucher->invoices()->update(['voucher_id' => null]);
+        $voucher->delete();
+
+        return redirect()->route('vouchers.index')
+            ->with('success', "Voucher {$code} berhasil dihapus.");
+    }
+
     /**
      * AJAX — validasi kode voucher di form invoice
      * Route: POST /vouchers/validate-code

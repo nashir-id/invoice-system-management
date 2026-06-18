@@ -42,12 +42,18 @@
 
 <div class="invoice-page-head">
     <div class="invoice-page-subtitle">
+        @staff
+        Lihat daftar invoice dan status pembayaran.
+        @else
         Kelola invoice, status pembayaran, dan data tagihan klien.
+        @endstaff
     </div>
+    @adminup
     <a href="{{ route('invoices.create') }}" class="btn btn-primary">
         <svg viewBox="0 0 16 16" fill="none"><path d="M8 2v12M2 8h12" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg>
         Buat Invoice
     </a>
+    @endadminup
 </div>
 
 {{-- Status tabs --}}
@@ -141,7 +147,9 @@
             <div class="empty-state">
                 <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="4" width="32" height="40" rx="4" stroke="currentColor" stroke-width="2"/><path d="M16 16h16M16 24h16M16 32h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 <p>Tidak ada invoice ditemukan.</p>
+                @adminup
                 <a href="{{ route('invoices.create') }}" class="btn btn-primary">+ Buat Invoice</a>
+                @endadminup
             </div>
         @else
         <table>
@@ -192,12 +200,21 @@
                         </span>
                     </td>
                     <td>
-                        <div style="display:flex;gap:6px">
+                        <div style="display:flex;gap:6px;flex-wrap:wrap">
                             <a href="{{ route('invoices.show', $inv) }}" class="btn btn-outline btn-sm">Detail</a>
                            
+                            @adminup
                             @if($inv->status !== 'paid')
                                 <a href="{{ route('invoices.edit', $inv) }}" class="btn btn-outline btn-sm">Edit</a>
+                                <form method="POST"
+                                      action="{{ route('invoices.destroy', $inv) }}"
+                                      onsubmit="return confirm('Hapus invoice {{ addslashes($inv->invoice_number) }}?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Hapus</button>
+                                </form>
                             @endif
+                            @endadminup
                             
                         </div>
                     </td>

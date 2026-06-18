@@ -12,6 +12,7 @@
         </svg>
         Download PDF
     </a>
+    @adminup
     {{-- Kirim WhatsApp --}}
     <button onclick="sendWhatsApp()" class="btn btn-outline" style="color:#16a34a;border-color:#bbf7d0">
         <svg viewBox="0 0 16 16" fill="none">
@@ -20,7 +21,6 @@
         </svg>
         WhatsApp
     </button>
-    @adminup
         @if ($invoice->status !== 'paid')
             <a href="{{ route('invoices.edit', $invoice) }}" class="btn btn-outline">Edit</a>
         @endif
@@ -201,34 +201,77 @@
         }
 
         /* Bank info */
-        .inv-bank {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 8px;
-            padding: 12px 14px;
+        .bank-section {
             margin-bottom: 16px;
+            border: 1px solid #e8edf3;
+            border-radius: 10px;
+            overflow: hidden;
+            background: #fff;
         }
 
-        .inv-bank-title {
+        .bank-section-head {
+            padding: 11px 14px;
+            border-bottom: 1px solid #f1f5f9;
             font-size: 11px;
-            font-weight: 600;
-            color: #1e40af;
+            font-weight: 700;
+            color: #64748b;
             text-transform: uppercase;
             letter-spacing: .06em;
+        }
+
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .bank-account {
+            padding: 14px;
+            border-right: 1px solid #f1f5f9;
+            min-width: 0;
+        }
+
+        .bank-account:last-child {
+            border-right: none;
+        }
+
+        .bank-logo {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 74px;
+            height: 30px;
+            border-radius: 6px;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: .02em;
             margin-bottom: 8px;
+            box-shadow: inset 0 -1px 0 rgba(255, 255, 255, .22);
         }
 
-        .inv-bank-item {
+        .bank-logo-mandiri { background: linear-gradient(135deg, #003d79 0%, #0068b5 58%, #f7b500 58%, #f7b500 100%); }
+        .bank-logo-bca { background: #005baa; }
+        .bank-logo-seabank { background: #ff6b00; }
+
+        .bank-name {
             font-size: 12px;
-            color: #1e40af;
-            margin-bottom: 3px;
-            display: flex;
-            gap: 8px;
+            font-weight: 700;
+            color: #1a1a2e;
         }
 
-        .inv-bank-item span:first-child {
-            color: #64748b;
-            min-width: 80px;
+        .bank-number {
+            margin-top: 4px;
+            color: #111827;
+            font-size: 15px;
+            font-weight: 800;
+            overflow-wrap: anywhere;
+        }
+
+        .bank-holder {
+            margin-top: 3px;
+            color: #94a3b8;
+            font-size: 11px;
+            line-height: 1.35;
         }
 
         /* T&C */
@@ -350,11 +393,13 @@
 }
 
 .payment-bank-card{
-    display:block;
+    display:flex;
+    gap:12px;
+    align-items:center;
     background:#fff;
     border:1px solid #e5e7eb;
     border-radius:12px;
-    padding:16px;
+    padding:14px;
     text-decoration:none;
     transition:.2s;
 }
@@ -366,22 +411,33 @@
 }
 
 .payment-bank-name{
-    font-size:15px;
+    font-size:13px;
     font-weight:700;
     color:#1e1b4b;
 }
 
 .payment-bank-number{
-    font-size:18px;
+    font-size:16px;
     font-weight:700;
     color:#111827;
-    margin-top:6px;
+    margin-top:3px;
+    overflow-wrap:anywhere;
 }
 
 .payment-bank-action{
-    margin-top:8px;
+    margin-top:6px;
     font-size:12px;
     color:#6d62e8;
+}
+
+.paid-bank {
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    margin-top:10px;
+    color:#166534;
+    font-size:13px;
 }
         /* Log */
         .log-card {
@@ -437,6 +493,19 @@
         @media (max-width: 900px) {
             .inv-layout {
                 grid-template-columns: 1fr;
+            }
+
+            .bank-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .bank-account {
+                border-right: none;
+                border-bottom: 1px solid #f1f5f9;
+            }
+
+            .bank-account:last-child {
+                border-bottom: none;
             }
         }
     </style>
@@ -654,6 +723,7 @@
 
  <div class="right-panel">
 
+    @adminup
     @if($invoice->status !== 'paid')
 
     <div class="pay-form">
@@ -780,6 +850,7 @@
     </div>
 
     @endif
+    @endadminup
 
         {{-- Aksi lain --}}
         <div class="card">
@@ -808,6 +879,7 @@
                     Download PDF
                 </a>
                 {{-- Duplikat --}}
+                @adminup
                 <form method="POST" action="{{ route('invoices.duplicate', $invoice) }}">
                     @csrf
                     <button type="submit" class="btn btn-outline" style="width:100%;justify-content:center">
@@ -834,6 +906,7 @@
                         </button>
                     </form>
                 @endif
+                @endadminup
             </div>
         </div>
 

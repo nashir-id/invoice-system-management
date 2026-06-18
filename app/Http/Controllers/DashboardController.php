@@ -9,6 +9,10 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->role === 'staff') {
+            return redirect()->route('invoices.index');
+        }
+
         // Update status invoice yang sudah overdue
         Invoice::unpaid()
             ->whereNotNull('due_date')

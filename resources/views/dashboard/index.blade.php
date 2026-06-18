@@ -48,7 +48,9 @@
             <div class="empty-state">
                 <svg viewBox="0 0 48 48" fill="none"><rect x="8" y="4" width="32" height="40" rx="4" stroke="currentColor" stroke-width="2"/><path d="M16 16h16M16 24h16M16 32h8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
                 <p>Belum ada invoice. Mulai buat invoice pertama kamu!</p>
+                @adminup
                 <a href="{{ route('invoices.create') }}" class="btn btn-primary">+ Buat Invoice</a>
+                @endadminup
             </div>
         @else
         <table>
